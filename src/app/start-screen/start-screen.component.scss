@@ -1,0 +1,35 @@
+@import './../shared/mixins/mixins.scss';
+
+.start-screen {
+    position: relative;
+    height: 100%;
+    background-color: #282828;
+    @include flexbox();
+
+    &-img {
+        height: 80%;
+    }
+}
+
+.start-label {
+    position: absolute;
+    bottom: 25%;
+    left: 0;
+    right: 0;
+    @include flexbox();  
+
+    &-img {
+        display: inline-block;
+        width: 40vh;
+        transition: transform .2s ease;
+        cursor: pointer;
+
+        &:hover {
+            transform: scale(1.05);
+        } 
+        
+        &:active {
+            transform: unset;
+        }
+    }
+}
