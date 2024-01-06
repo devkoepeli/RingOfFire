@@ -1,5 +1,26 @@
-img {
-    display: block;
+@import './../shared/mixins/mixins.scss';
+
+.field {
+    position: relative;
     height: 100%;
     width: 100%;
+    background-image: url('./../../assets/img/game_board.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    @include flexbox();
+}
+
+.card-stack {
+    position: relative;
+    width: 150px;
+    height: 235px;
+    @include flexbox();
+
+    .card-cover {
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
 }
