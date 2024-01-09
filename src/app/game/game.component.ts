@@ -20,7 +20,6 @@ export class GameComponent implements OnInit{
   }
 
   ngOnInit() {
-    console.log(this.game);
   }
 
   newGame() {
@@ -31,9 +30,6 @@ export class GameComponent implements OnInit{
     if (!this.pickCardAnimation && lastCard != undefined) {
       this.currentCard = lastCard;
       this.pickCardAnimation = true;
-
-      console.log(this.game.playedCards);
-      console.log(this.game.stack);
 
       setTimeout(() => {
         this.game.playedCards.push(this.currentCard);
