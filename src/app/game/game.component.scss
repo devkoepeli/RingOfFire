@@ -57,3 +57,9 @@
     bottom: 20px;
     left: 20px;
 }
+
+.player-p-absolute {
+    position: absolute;
+    left: 0;
+    z-index: 5;
+}

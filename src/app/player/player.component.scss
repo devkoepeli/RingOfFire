@@ -1,0 +1,18 @@
+@import './../shared/mixins/mixins.scss';
+
+.player {
+    @include flexbox($jc: start, $gap: 16px);
+    width: 300px;
+    background-color: rgba(255, 255, 255, 0.75);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+
+    img {
+        width: 100px;
+        border-radius: 50%;
+    }
+
+    span {
+        font-size: 32px;
+    }
+}
