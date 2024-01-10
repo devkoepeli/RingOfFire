@@ -26,26 +26,18 @@ import { InstructionComponent } from './instruction/instruction.component';
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
-export class GameComponent implements OnInit {
+export class GameComponent {
   pickCardAnimation = false;
   game: Game;
   currentCard: string = '';
-  hasStarted = false;
 
   constructor(public dialog: MatDialog) {
     this.game = new Game();
   }
 
-  ngOnInit() {
-  }
-
-  newGame() {
-  }
-
   takeCard() {
     const lastCard = this.game.stack.pop();
     if (!this.pickCardAnimation && lastCard != undefined) {
-      this.hasStarted = true;
       this.currentCard = lastCard;
       this.pickCardAnimation = true;
       this.incrementCurrentPlayer();
@@ -61,15 +53,16 @@ export class GameComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
 
     dialogRef.afterClosed().subscribe((name: string) => {
-      this.game.players.push(name);
+      if (name) {
+        this.game.players.push(name);
+      }
     });
   }
 
   incrementCurrentPlayer() {
-    if (this.game.currentPlayer < (this.game.players.length - 1)) {
+    if (this.game.players.length > 0) {
       this.game.currentPlayer++;
-    } else {
-      this.game.currentPlayer = 0;
+      this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
     }
   }
 }
