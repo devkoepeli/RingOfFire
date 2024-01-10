@@ -1,5 +1,5 @@
-<app-player *ngFor="let player of game.players, let i = index" [ngStyle]="{'top.px': 64 + (160 * i)}"
-    [name]="player" class="player-p-absolute"></app-player>
+<app-player *ngFor="let player of game.players, let i = index" [ngStyle]="{'top.px': 64 + (128 * i)}"
+    [name]="player" [isPlayerActive]="i == game.currentPlayer" class="player-p-absolute"></app-player>
 
 <div class="field">
     <div class="card-stack">
@@ -17,6 +17,8 @@
             src="./assets/img/cards/{{ currentCard }}.png" alt="Card">
     </div>
 </div>
+
+<app-instruction *ngIf="hasStarted" [card]="currentCard"></app-instruction>
 
 <button mat-fab color="primary" class="btn-add" (click)="openDialog()">
     <mat-icon>add</mat-icon>

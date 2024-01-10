@@ -1,18 +1,22 @@
-@import './../shared/mixins/mixins.scss';
+@import './../../shared/mixins/mixins.scss';
 
 .player {
     @include flexbox($jc: start, $gap: 16px);
     width: 300px;
-    background-color: rgba(255, 255, 255, 0.75);
+    background-color: rgba(255, 255, 255, 0.6);
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
 
     img {
-        width: 100px;
+        width: 80px;
         border-radius: 50%;
     }
 
     span {
         font-size: 32px;
+    }
+
+    &-active {
+        background-color: rgba(255, 255, 255, 1)
     }
 }
