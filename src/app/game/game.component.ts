@@ -26,12 +26,15 @@ import { InstructionComponent } from './instruction/instruction.component';
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
-export class GameComponent {
+export class GameComponent implements OnInit {
   pickCardAnimation = false;
-  game: Game;
+  game!: Game;
   currentCard: string = '';
 
   constructor(public dialog: MatDialog) {
+  }
+  
+  ngOnInit() {
     this.game = new Game();
   }
 

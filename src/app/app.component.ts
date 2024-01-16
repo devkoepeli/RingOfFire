@@ -12,5 +12,5 @@ import { GameComponent } from './game/game.component';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'RingOfFire';
+  title = 'ringoffire';
 }
