@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { collection, Firestore, doc, documentId, onSnapshot, DocumentData, addDoc, updateDoc } from '@angular/fire/firestore';
 import { Game } from '../../models/game';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,25 +9,22 @@ import { Game } from '../../models/game';
 export class GameService {
   firestore: Firestore = inject(Firestore);
 
-  unsubGame;
-
-  game!: Game
+  private gameSubject = new BehaviorSubject<Game | null>(null);
+  game$ = this.gameSubject.asObservable();
 
   constructor() { 
-    this.unsubGame = this.snapshotGame();
   }
 
   async addGame(game: Game) {
     await addDoc(this.getColRef(), game);
   }
 
-  snapshotGame() {
-    return onSnapshot(this.getColRef(), games => {
-      games.forEach(game => {
-        this.game = this.setGameObjectWithId(game.data(), game.id);
-        console.log('new Snapshot taken :', this.game);
-      });
-    })
+  snapshotCurrentGame(docId: string) {
+    return onSnapshot(this.getDocRef(docId), game => {
+        console.log('Snapshot updated: ', game.data());
+        const updatedGame = this.setGameObjectWithId(game.data(), docId);
+        this.gameSubject.next(updatedGame);
+    });
   }
 
   getColRef() {
@@ -34,7 +32,7 @@ export class GameService {
   }
 
   getDocRef(docId: string) {
-    return doc(this.firestore, 'notes', docId);
+    return doc(this.firestore, 'games', docId);
   }
 
   setGameObjectWithId(game: any, gameId: string): Game {

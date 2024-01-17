@@ -9,6 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { InstructionComponent } from './instruction/instruction.component';
 import { GameService } from '../firebase-services/game.service';
+import { ActivatedRoute } from '@angular/router';
+import { Unsubscribe } from '@angular/fire/firestore';
 
 
 @Component({
@@ -31,13 +33,36 @@ export class GameComponent implements OnInit {
   pickCardAnimation = false;
   game!: Game;
   currentCard: string = '';
+  gameId: string = '';
 
-  constructor(public dialog: MatDialog, private gameService: GameService) {
-  }
-  
+  unsubGame!: Unsubscribe;
+
+  constructor(
+    public dialog: MatDialog,
+    private gameService: GameService,
+    private route: ActivatedRoute
+  ) { }
+
   ngOnInit() {
     this.game = new Game();
-    this.addGameObject(this.game);
+    this.route.params.subscribe(params => {
+      console.log(params['id']);
+      this.gameId = params['id'];
+      // only after this we activate the realtime listener
+      this.unsubGame = this.gameService.snapshotCurrentGame(params['id']);
+      this.gameService.game$.subscribe(game => {
+        if (game) {
+          this.game = game;
+        }
+      });
+    });
+    // this.addGameObject(this.game);
+  }
+
+  ngOnDestroy() {
+    if (this.unsubGame) {
+      this.unsubGame();
+    }
   }
 
   // convert custom game object into a simple object because for firebase
@@ -61,6 +86,7 @@ export class GameComponent implements OnInit {
 
       setTimeout(() => {
         this.game.playedCards.push(this.currentCard);
+        this.gameService.updateDoc(this.game, this.gameId);
         this.pickCardAnimation = false;
       }, 1000);
     }
@@ -72,6 +98,7 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe((name: string) => {
       if (name) {
         this.game.players.push(name);
+        this.gameService.updateDoc(this.game, this.gameId);
       }
     });
   }
