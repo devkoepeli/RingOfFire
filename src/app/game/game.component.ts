@@ -8,6 +8,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { InstructionComponent } from './instruction/instruction.component';
+import { GameService } from '../firebase-services/game.service';
 
 
 @Component({
@@ -31,11 +32,24 @@ export class GameComponent implements OnInit {
   game!: Game;
   currentCard: string = '';
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog, private gameService: GameService) {
   }
   
   ngOnInit() {
     this.game = new Game();
+    this.addGameObject(this.game);
+  }
+
+  // convert custom game object into a simple object because for firebase
+  // data must be an object, but it was: a custom Game object
+  addGameObject(game: Game) {
+    const cleanGame: Game = {
+      players: game.players,
+      stack: game.stack,
+      playedCards: game.playedCards,
+      currentPlayer: game.currentPlayer
+    }
+    this.gameService.addGame(cleanGame);
   }
 
   takeCard() {
