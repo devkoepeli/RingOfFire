@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Game } from '../../models/game';
+import { GameService } from '../firebase-services/game.service';
 
 @Component({
   selector: 'app-start-screen',
@@ -11,11 +13,26 @@ import { Router } from '@angular/router';
 })
 export class StartScreenComponent {
 
-  constructor(private router: Router) {
+  game!: Game;
+
+  constructor(private router: Router, private gameService: GameService) {
 
   }
 
-  startGame() {
-    this.router.navigateByUrl('/game');
+  async startGame() {
+    this.game = new Game();
+    const docRef = await this.gameService.addGame(this.setSimpleObject(this.game));
+    this.router.navigateByUrl('/game/' + docRef.id);
+  }
+
+  // convert custom game object into a simple object because for firebase
+  // data must be an object, but it was: a custom Game object
+  setSimpleObject(game: Game) {
+    return {
+      players: game.players,
+      stack: game.stack,
+      playedCards: game.playedCards,
+      currentPlayer: game.currentPlayer
+    }
   }
 }

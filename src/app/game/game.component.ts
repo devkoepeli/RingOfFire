@@ -46,7 +46,6 @@ export class GameComponent implements OnInit {
   ngOnInit() {
     this.game = new Game();
     this.route.params.subscribe(params => {
-      console.log(params['id']);
       this.gameId = params['id'];
       // only after this we activate the realtime listener
       this.unsubGame = this.gameService.snapshotCurrentGame(params['id']);
@@ -56,25 +55,11 @@ export class GameComponent implements OnInit {
         }
       });
     });
-    // this.addGameObject(this.game);
   }
 
   ngOnDestroy() {
-    if (this.unsubGame) {
-      this.unsubGame();
-    }
-  }
-
-  // convert custom game object into a simple object because for firebase
-  // data must be an object, but it was: a custom Game object
-  addGameObject(game: Game) {
-    const cleanGame: Game = {
-      players: game.players,
-      stack: game.stack,
-      playedCards: game.playedCards,
-      currentPlayer: game.currentPlayer
-    }
-    this.gameService.addGame(cleanGame);
+    this.unsubGame();
+    this.gameService.gameSubject.unsubscribe();
   }
 
   takeCard() {
