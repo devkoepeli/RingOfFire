@@ -30,9 +30,7 @@ import { Unsubscribe } from '@angular/fire/firestore';
   styleUrl: './game.component.scss'
 })
 export class GameComponent implements OnInit {
-  pickCardAnimation = false;
   game!: Game;
-  currentCard: string = '';
   gameId: string = '';
 
   unsubGame!: Unsubscribe;
@@ -64,15 +62,16 @@ export class GameComponent implements OnInit {
 
   takeCard() {
     const lastCard = this.game.stack.pop();
-    if (!this.pickCardAnimation && lastCard != undefined) {
-      this.currentCard = lastCard;
-      this.pickCardAnimation = true;
+    if (!this.game.pickCardAnimation && lastCard != undefined) {
+      this.game.currentCard = lastCard;
+      this.game.pickCardAnimation = true;
       this.incrementCurrentPlayer();
+      this.gameService.updateDoc(this.game, this.gameId);
 
       setTimeout(() => {
-        this.game.playedCards.push(this.currentCard);
+        this.game.playedCards.push(this.game.currentCard);
+        this.game.pickCardAnimation = false;
         this.gameService.updateDoc(this.game, this.gameId);
-        this.pickCardAnimation = false;
       }, 1000);
     }
   }

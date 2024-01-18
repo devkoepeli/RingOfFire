@@ -40,7 +40,9 @@ export class GameService {
       players: game.players,
       stack: game.stack,
       playedCards: game.playedCards,
-      currentPlayer: game.currentPlayer
+      currentPlayer: game.currentPlayer,
+      pickCardAnimation: game.pickCardAnimation,
+      currentCard: game.currentCard
     }
   }
 
@@ -56,7 +58,9 @@ export class GameService {
       players: game.players,
       stack: game.stack,
       playedCards: game.playedCards,
-      currentPlayer: game.currentPlayer
+      currentPlayer: game.currentPlayer,
+      pickCardAnimation: game.pickCardAnimation,
+      currentCard: game.currentCard
     }
   }
 

@@ -13,12 +13,12 @@
             class="card-cover played-card">
 
         <!--played card-->
-        <img *ngIf="pickCardAnimation" class="card-cover top-card pick-card"
-            src="./assets/img/cards/{{ currentCard }}.png" alt="Card">
+        <img *ngIf="game.pickCardAnimation" class="card-cover top-card pick-card"
+            src="./assets/img/cards/{{ game.currentCard }}.png" alt="Card">
     </div>
 </div>
 
-<app-instruction [card]="currentCard"></app-instruction>
+<app-instruction [card]="game.currentCard"></app-instruction>
 
 <button mat-fab color="primary" class="btn-add" (click)="openDialog()">
     <mat-icon>add</mat-icon>
