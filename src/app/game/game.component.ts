@@ -11,6 +11,7 @@ import { InstructionComponent } from './instruction/instruction.component';
 import { GameService } from '../firebase-services/game.service';
 import { ActivatedRoute } from '@angular/router';
 import { Unsubscribe } from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -34,6 +35,7 @@ export class GameComponent implements OnInit {
   gameId: string = '';
 
   unsubGame!: Unsubscribe;
+  paramsSubscription!: Subscription;
 
   constructor(
     public dialog: MatDialog,
@@ -43,14 +45,14 @@ export class GameComponent implements OnInit {
 
   ngOnInit() {
     this.game = new Game();
-    this.route.params.subscribe(params => {
+    this.paramsSubscription = this.route.params.subscribe(params => {
       this.gameId = params['id'];
       // only after this we activate the realtime listener
       this.unsubGame = this.gameService.snapshotCurrentGame(params['id']);
       this.gameService.game$.subscribe(game => {
         if (game) {
           this.game = game;
-        }
+        } 
       });
     });
   }
@@ -58,6 +60,7 @@ export class GameComponent implements OnInit {
   ngOnDestroy() {
     this.unsubGame();
     this.gameService.gameSubject.unsubscribe();
+    this.paramsSubscription.unsubscribe();
   }
 
   takeCard() {

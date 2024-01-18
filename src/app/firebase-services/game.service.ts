@@ -20,9 +20,12 @@ export class GameService {
   }
 
   snapshotCurrentGame(docId: string) {
-    return onSnapshot(this.getDocRef(docId), game => {
+    return onSnapshot(this.getDocRef(docId),
+        (game) => {
         const updatedGame = this.setGameObjectWithId(game.data(), docId);
         this.gameSubject.next(updatedGame);
+    }, (error) => {
+        alert('Current Error in saving the game status, other players may not see the current game status');
     });
   }
 
@@ -48,8 +51,12 @@ export class GameService {
 
   async updateDoc(game: Game, gameId: string) {
     if (gameId != undefined) {
-      const docRef = this.getDocRef(gameId);    
-      await updateDoc(docRef, this.getGameObjectWithoutId(game));
+      try {
+        const docRef = this.getDocRef(gameId);    
+        await updateDoc(docRef, this.getGameObjectWithoutId(game));
+      } catch(e) {
+        console.error('Current game status could not have been saved in the server: ', e);
+      }
     }
   }
 
@@ -63,7 +70,4 @@ export class GameService {
       currentCard: game.currentCard
     }
   }
-
-  // TODO unsubscribe
-  // TODO error handling
 }
